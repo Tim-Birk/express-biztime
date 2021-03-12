@@ -93,7 +93,7 @@ router.delete('/:code', async function (req, res, next) {
         404
       );
     }
-    return res.json({ message: 'company deleted' });
+    return res.json({ status: 'deleted' });
   } catch (err) {
     return next(err);
   }
