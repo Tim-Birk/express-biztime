@@ -74,7 +74,7 @@ router.patch('/:id', async function (req, res, next) {
       throw new ExpressError(`There is no invoice with id of '${id}`, 404);
     }
 
-    return res.json({ invoice: result.rows[0] });
+    return res.status(200).json({ invoice: result.rows[0] });
   } catch (err) {
     return next(err);
   }
