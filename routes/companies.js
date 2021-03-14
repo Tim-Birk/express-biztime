@@ -17,9 +17,11 @@ router.get('/', async function (req, res, next) {
 router.get('/:code', async function (req, res, next) {
   try {
     const result = await db.query(
-      `SELECT * 
-         FROM companies 
-         WHERE code = $1`,
+      `SELECT c.code, c.name, c.description, i.industry
+         FROM companies AS c
+         LEFT JOIN industries_companies ic ON c.code = ic.company_code
+         LEFT JOIN industries i ON ic.industry_code = i.code
+         WHERE c.code = $1`,
       [req.params.code]
     );
 
@@ -30,7 +32,9 @@ router.get('/:code', async function (req, res, next) {
       notFoundError.status = 404;
       throw notFoundError;
     }
-    return res.json({ company: result.rows[0] });
+    const { code, name, description, industry } = result.rows[0];
+    const industries = industry ? result.rows.map((i) => i.industry) : [];
+    return res.json({ company: { code, name, description, industries } });
   } catch (err) {
     return next(err);
   }

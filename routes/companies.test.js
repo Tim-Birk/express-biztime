@@ -21,7 +21,7 @@ beforeEach(async function () {
 /** GET /companies - returns `{companies: [company, ...]}` */
 
 describe('GET /companies', function () {
-  test('Gets a list of 1 company', async function () {
+  test('Gets a list of companies', async function () {
     const response = await request(app).get(`/companies`);
     expect(response.statusCode).toEqual(200);
     expect(response.body).toEqual({
@@ -37,7 +37,9 @@ describe('GET /companies/:code', function () {
   test('Gets a single company', async function () {
     const response = await request(app).get(`/companies/${testcompany.code}`);
     expect(response.statusCode).toEqual(200);
-    expect(response.body).toEqual({ company: testcompany });
+    expect(response.body).toEqual({
+      company: { ...testcompany, industries: [] },
+    });
   });
 
   test("Responds with 404 if can't find company", async function () {
